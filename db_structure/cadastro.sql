@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: dgi_catalog_db
--- Generation Time: Jan 13, 2020 at 11:59 AM
+-- Generation Time: Jan 15, 2020 at 03:05 PM
 -- Server version: 10.4.11-MariaDB-1:10.4.11+maria~bionic
 -- PHP Version: 7.4.1
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `cadastro`
 --
+CREATE DATABASE IF NOT EXISTS `cadastro` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `cadastro`;
 
 -- --------------------------------------------------------
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: dgi_catalog_db
--- Generation Time: Jan 13, 2020 at 12:00 PM
+-- Generation Time: Jan 15, 2020 at 03:04 PM
 -- Server version: 10.4.11-MariaDB-1:10.4.11+maria~bionic
 -- PHP Version: 7.4.1
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `catalogo`
 --
+CREATE DATABASE IF NOT EXISTS `catalogo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `catalogo`;
 
 -- --------------------------------------------------------
 
@@ -69,7 +71,6 @@ CREATE TABLE `Company` (
 --
 
 CREATE TABLE `Dataset` (
-  `Id` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL,
   `Description` varchar(512) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -225,7 +226,8 @@ ALTER TABLE `Company`
 -- Indexes for table `Dataset`
 --
 ALTER TABLE `Dataset`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Name`),
+  ADD KEY `INDEX_NAME_COLUMN` (`Name`);
 
 --
 -- Indexes for table `Download`
@@ -282,12 +284,6 @@ ALTER TABLE `User`
 --
 ALTER TABLE `Address`
   MODIFY `addressId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Dataset`
---
-ALTER TABLE `Dataset`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Download`
