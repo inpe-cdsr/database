@@ -1,3 +1,15 @@
+--
+-- Database: `catalogo`
+--
+USE `catalogo`;
+
+
+-- --------------------------------------------------------
+
+--
+-- View structure for view `collection`
+--
+
 CREATE OR REPLACE VIEW `collection` AS
 SELECT d.Name as id, d.Description as description,
         MIN(s.Date) as start_date, MAX(s.Date) as end_date,

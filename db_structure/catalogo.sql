@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.3
+-- version 4.9.4
 -- https://www.phpmyadmin.net/
 --
--- Host: dgi_catalog_db
--- Generation Time: Jan 15, 2020 at 03:04 PM
+-- Host: inpe_cdsr_db
+-- Generation Time: Jan 29, 2020 at 12:41 PM
 -- Server version: 10.4.11-MariaDB-1:10.4.11+maria~bionic
 -- PHP Version: 7.4.1
 
@@ -23,6 +23,26 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `catalogo` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `catalogo`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Activities`
+--
+
+CREATE TABLE `Activities` (
+  `id` bigint(20) NOT NULL,
+  `task` varchar(32) NOT NULL,
+  `sceneid` varchar(32) NOT NULL,
+  `dataset` varchar(32) NOT NULL,
+  `launch` datetime NOT NULL,
+  `start` datetime DEFAULT NULL,
+  `end` datetime DEFAULT NULL,
+  `elapsed` float DEFAULT NULL,
+  `status` varchar(16) NOT NULL,
+  `message` varchar(1024) DEFAULT NULL,
+  `activity` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -48,6 +68,23 @@ CREATE TABLE `Address` (
   `delivery` int(11) DEFAULT NULL,
   `payment` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `collection`
+-- (See below for the actual view)
+--
+CREATE TABLE `collection` (
+`id` varchar(50)
+,`description` varchar(512)
+,`start_date` date
+,`end_date` date
+,`min_y` float
+,`min_x` float
+,`max_x` float
+,`max_y` float
+);
 
 -- --------------------------------------------------------
 
@@ -102,9 +139,7 @@ CREATE TABLE `Download` (
 --
 
 CREATE TABLE `Product` (
-  `Id` int(11) NOT NULL,
   `Dataset` varchar(50) NOT NULL,
-  `Type` varchar(20) NOT NULL,
   `ProcessingDate` datetime DEFAULT NULL,
   `GeometricProcessing` varchar(20) DEFAULT NULL,
   `RadiometricProcessing` varchar(20) DEFAULT NULL,
@@ -199,13 +234,30 @@ CREATE TABLE `User` (
   `userStatus` char(1) NOT NULL,
   `registerDate` date NOT NULL,
   `unblockDate` datetime DEFAULT NULL,
-  `marlin` int(11) NOT NULL,
-  `language` varchar(5) DEFAULT NULL
+  `marlin` int(11) DEFAULT NULL,
+  `language` varchar(5) DEFAULT NULL,
+  `siape` varchar(16) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `collection`
+--
+DROP TABLE IF EXISTS `collection`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `collection`  AS  select `d`.`Name` AS `id`,`d`.`Description` AS `description`,min(`s`.`Date`) AS `start_date`,max(`s`.`Date`) AS `end_date`,min(`s`.`BL_Latitude`) AS `min_y`,min(`s`.`BL_Latitude`) AS `min_x`,max(`s`.`TR_Latitude`) AS `max_x`,max(`s`.`TR_Longitude`) AS `max_y` from ((`Scene` `s` join `Product` `p`) join `Dataset` `d`) where `s`.`SceneId` = `p`.`SceneId` and `d`.`Name` = `p`.`Dataset` group by `p`.`Dataset` order by `p`.`Dataset` ;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `Activities`
+--
+ALTER TABLE `Activities`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `general` (`task`,`sceneid`,`dataset`);
 
 --
 -- Indexes for table `Address`
@@ -239,22 +291,17 @@ ALTER TABLE `Download`
 -- Indexes for table `Product`
 --
 ALTER TABLE `Product`
-  ADD PRIMARY KEY (`Id`),
   ADD KEY `Product_idx4` (`GeometricProcessing`),
-  ADD KEY `Product_idx3` (`Type`),
   ADD KEY `Product_idx1` (`SceneId`),
   ADD KEY `Product_idx6` (`Band`),
   ADD KEY `Product_idx5` (`RadiometricProcessing`),
-  ADD KEY `Product_idx2` (`Dataset`),
-  ADD KEY `Product_idx7` (`ProcessingDate`);
+  ADD KEY `Product_idx2` (`Dataset`);
 
 --
 -- Indexes for table `Qlook`
 --
 ALTER TABLE `Qlook`
-  ADD PRIMARY KEY (`SceneId`),
-  ADD UNIQUE KEY `Filename` (`QLfilename`),
-  ADD KEY `Product_idx1` (`SceneId`);
+  ADD PRIMARY KEY (`SceneId`);
 
 --
 -- Indexes for table `Scene`
@@ -269,6 +316,12 @@ ALTER TABLE `Scene`
   ADD KEY `Scene_idx6` (`CloudCoverQ1`,`CloudCoverQ2`,`CloudCoverQ3`,`CloudCoverQ4`);
 
 --
+-- Indexes for table `SceneDataset`
+--
+ALTER TABLE `SceneDataset`
+  ADD UNIQUE KEY `scenedataset` (`SceneId`,`Dataset`);
+
+--
 -- Indexes for table `User`
 --
 ALTER TABLE `User`
@@ -278,6 +331,12 @@ ALTER TABLE `User`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `Activities`
+--
+ALTER TABLE `Activities`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Address`
@@ -290,12 +349,6 @@ ALTER TABLE `Address`
 --
 ALTER TABLE `Download`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Product`
---
-ALTER TABLE `Product`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

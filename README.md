@@ -10,7 +10,7 @@ git clone https://github.com/inpe-cdsr/database.git && \
 cd database/
 ```
 
-Create the database schemas with the following commands:
+Create the database schemas and views with the following commands:
 
 ```
 $ docker exec -i inpe_cdsr_db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < db_structure/catalogo.sql

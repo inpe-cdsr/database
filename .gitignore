@@ -1,3 +1,5 @@
 db_backup/*
 
+ignore/*
+
 .vscode/*

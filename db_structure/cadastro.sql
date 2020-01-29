@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.3
+-- version 4.9.4
 -- https://www.phpmyadmin.net/
 --
--- Host: dgi_catalog_db
--- Generation Time: Jan 15, 2020 at 03:05 PM
+-- Host: inpe_cdsr_db
+-- Generation Time: Jan 29, 2020 at 12:41 PM
 -- Server version: 10.4.11-MariaDB-1:10.4.11+maria~bionic
 -- PHP Version: 7.4.1
 
