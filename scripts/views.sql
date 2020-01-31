@@ -26,7 +26,7 @@ SELECT a.SceneId as id,
         b.Dataset as collection,
         Date as date, Path as path, Row as row, Satellite as satellite, Sensor as sensor, CloudCoverQ1 as cloud_cover,
         q.QLfilename as thumbnail,
-        CONCAT('[', GROUP_CONCAT(CONCAT('{"band": "', b.band, '", "filename": "', b.filename,'"}')), ']') as assets,
+        CONCAT('[', GROUP_CONCAT(CONCAT('{"band": "', b.band, '", "href": "', b.filename,'"}')), ']') as assets,
         TL_Longitude, TL_Latitude, BL_Longitude, BL_Latitude,
         BR_Longitude, BR_Latitude, TR_Longitude, TR_Latitude
 FROM Scene a, Product b, Dataset c, Qlook q
