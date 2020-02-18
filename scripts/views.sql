@@ -15,10 +15,10 @@ SELECT d.Name id,
         d.Description description,
         MIN(s.Date) start_date,
         MAX(s.Date) end_date,
-        MIN(BL_Latitude) min_y,
+        MIN(BL_Longitude) min_y,
         MIN(BL_Latitude) min_x,
-        MAX(TR_Latitude) max_x,
-        MAX(TR_Longitude) max_y
+        MAX(TR_Longitude) max_y,
+        MAX(TR_Latitude) max_x
 FROM Scene s, Product p, Dataset d
 WHERE s.sceneId = p.sceneId AND d.name = p.Dataset
 GROUP BY p.Dataset
