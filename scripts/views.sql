@@ -7,7 +7,7 @@ USE `catalogo`;
 -- --------------------------------------------------------
 
 --
--- View structure for view `collection`
+-- View structure for view `stac_collection` and `stac_item`
 --
 
 CREATE OR REPLACE VIEW `stac_collection` AS
@@ -52,3 +52,16 @@ FROM Scene s, Product p, Dataset d, Qlook q
 WHERE s.SceneId = p.SceneId AND p.Dataset = d.Name AND p.SceneId = q.SceneId
 GROUP BY s.SceneId
 ORDER BY s.Date DESC, s.SceneId ASC;
+
+
+-- --------------------------------------------------------
+
+--
+-- View structure for view `stac_collection` and `stac_item`
+--
+
+CREATE OR REPLACE VIEW `graph_amount_scenes_by_dataset_and_date` AS
+SELECT count(SceneId) amount, Dataset dataset, Date date
+FROM `SceneDataset`
+GROUP BY Dataset, Date
+ORDER BY Dataset, Date;
