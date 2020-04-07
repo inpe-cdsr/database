@@ -7,7 +7,7 @@ USE `catalogo`;
 -- --------------------------------------------------------
 
 --
--- View structure for view `stac_collection` and `stac_item`
+-- View structure for views `stac_collection` and `stac_item`
 --
 
 CREATE OR REPLACE VIEW `stac_collection` AS
@@ -57,11 +57,15 @@ ORDER BY s.Date DESC, s.SceneId ASC;
 -- --------------------------------------------------------
 
 --
--- View structure for view `stac_collection` and `stac_item`
+-- View structure for view `graph_amount_scenes_by_dataset_and_date`
 --
 
 CREATE OR REPLACE VIEW `graph_amount_scenes_by_dataset_and_date` AS
-SELECT count(SceneId) amount, Dataset dataset, Date date
+SELECT COUNT(SceneId) amount,
+        Dataset dataset,
+        Date date,
+        C_longitude longitude,
+        C_latitude latitude
 FROM `SceneDataset`
 GROUP BY Dataset, Date
 ORDER BY Dataset, Date;
