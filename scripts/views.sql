@@ -68,4 +68,15 @@ SELECT COUNT(SceneId) amount,
         C_latitude latitude
 FROM `SceneDataset`
 GROUP BY Dataset, Date
-ORDER BY Dataset, Date;
+ORDER BY Date, Dataset;
+
+
+CREATE OR REPLACE VIEW `scene_dataset` AS
+SELECT  SceneId scene_id,
+        Dataset dataset,
+        Date date,
+        C_longitude longitude,
+        C_latitude latitude
+FROM `SceneDataset`
+ORDER BY Date, Dataset;
+
