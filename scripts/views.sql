@@ -60,17 +60,6 @@ ORDER BY s.Date DESC, s.SceneId ASC;
 -- View structure for view `graph_amount_scenes_by_dataset_and_date`
 --
 
-CREATE OR REPLACE VIEW `graph_amount_scenes_by_dataset_and_date` AS
-SELECT COUNT(SceneId) amount,
-        Dataset dataset,
-        Date date,
-        C_longitude longitude,
-        C_latitude latitude
-FROM `SceneDataset`
-GROUP BY Dataset, Date
-ORDER BY Date, Dataset;
-
-
 CREATE OR REPLACE VIEW `scene_dataset` AS
 SELECT  SceneId scene_id,
         Dataset dataset,
@@ -80,3 +69,13 @@ SELECT  SceneId scene_id,
 FROM `SceneDataset`
 ORDER BY Date, Dataset;
 
+
+CREATE OR REPLACE VIEW `dash_amount_scenes_by_dataset_year_month_lon_lat` AS
+SELECT COUNT(SceneId) amount,
+        Dataset dataset,
+        EXTRACT(YEAR_MONTH FROM `Date`) _year_month,
+        C_longitude longitude,
+        C_latitude latitude
+FROM `SceneDataset`
+GROUP BY dataset, _year_month, longitude, latitude
+ORDER BY _year_month, dataset;
