@@ -73,7 +73,7 @@ ORDER BY Date, Dataset;
 CREATE OR REPLACE VIEW `dash_amount_scenes_by_dataset_year_month_lon_lat` AS
 SELECT COUNT(SceneId) amount,
         Dataset dataset,
-        EXTRACT(YEAR_MONTH FROM `Date`) _year_month,
+        DATE_FORMAT(Date, '%Y-%m') _year_month,
         C_longitude longitude,
         C_latitude latitude
 FROM `SceneDataset`
