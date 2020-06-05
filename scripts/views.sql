@@ -36,7 +36,7 @@ SELECT s.SceneId id,
         s.Sensor sensor,
         s.CloudCover cloud_cover,
         s.SyncLoss sync_loss,
-        q.QLfilename thumbnail,
+        s.thumbnail thumbnail,
         CONCAT('[',
                 GROUP_CONCAT(CONCAT('{"band": "', p.band, '", "href": "', p.filename,'"}')),
         ']') assets,
@@ -48,10 +48,10 @@ SELECT s.SceneId id,
         BR_Latitude br_latitude,
         TR_Longitude tr_longitude,
         TR_Latitude tr_latitude
-FROM Scene s, Product p, Dataset d, Qlook q
-WHERE s.SceneId = p.SceneId AND p.Dataset = d.Name AND p.SceneId = q.SceneId
+FROM Scene s, Product p, Dataset d
+WHERE s.SceneId = p.SceneId AND p.Dataset = d.Name
 GROUP BY s.SceneId
-ORDER BY s.Date DESC, s.SceneId ASC;
+ORDER BY p.Dataset, s.Date DESC, s.Path, s.Row;
 
 
 -- --------------------------------------------------------
