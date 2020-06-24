@@ -50,7 +50,7 @@ SELECT s.SceneId id,
         TR_Latitude tr_latitude
 FROM Scene s, Product p, Dataset d
 WHERE s.SceneId = p.SceneId AND p.Dataset = d.Name
-GROUP BY s.SceneId
+GROUP BY s.SceneId, p.Dataset
 ORDER BY p.Dataset, s.Date DESC, s.Path, s.Row;
 
 
