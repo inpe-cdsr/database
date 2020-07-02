@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: inpe_cdsr_db
--- Generation Time: Jan 29, 2020 at 12:41 PM
--- Server version: 10.4.11-MariaDB-1:10.4.11+maria~bionic
+-- Generation Time: Jul 02, 2020 at 06:55 PM
+-- Server version: 10.5.3-MariaDB-1:10.5.3+maria~focal
 -- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
