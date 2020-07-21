@@ -7,10 +7,10 @@ USE `catalogo`;
 -- --------------------------------------------------------
 
 --
--- View structure for views `stac_collection` and `stac_item`
+-- `_stac_collection` and `_stac_item` views
 --
 
-CREATE OR REPLACE VIEW `stac_collection` AS
+CREATE OR REPLACE VIEW `_stac_collection` AS
 SELECT d.Name id,
         d.Description description,
         s.start_date,
@@ -36,7 +36,7 @@ ON d.Name LIKE CONCAT(s.satellite, '%')
 ORDER BY d.Name;
 
 
-CREATE OR REPLACE VIEW `stac_item` AS
+CREATE OR REPLACE VIEW `_stac_item` AS
 SELECT s.SceneId id,
         p.Dataset collection,
         s.Date date,
@@ -68,7 +68,32 @@ ORDER BY p.Dataset, s.Date DESC, s.Path, s.Row;
 -- --------------------------------------------------------
 
 --
--- View structure for view `graph_amount_scenes_by_dataset_and_date`
+-- Events
+--
+
+delimiter |
+CREATE EVENT IF NOT EXISTS e_updates_stac_tables
+        ON SCHEDULE EVERY 1 DAY
+                STARTS '2020-07-22 00:00:00'
+
+COMMENT 'Updates the stac_collection and stac_item tables'
+DO
+BEGIN
+        -- updates stac_collection table
+        DROP TABLE IF EXISTS stac_collection;
+        CREATE TABLE IF NOT EXISTS stac_collection (SELECT * FROM _stac_collection);
+
+        -- updates stac_item table
+        DROP TABLE IF EXISTS stac_item;
+        CREATE TABLE IF NOT EXISTS stac_item (SELECT * FROM _stac_item);
+END |
+delimiter ;
+
+
+-- --------------------------------------------------------
+
+--
+-- `scene_dataset` and `dash_amount_scenes_by_dataset_year_month_lon_lat` views
 --
 
 CREATE OR REPLACE VIEW `scene_dataset` AS
