@@ -31,7 +31,8 @@ FROM Dataset d
                 MAX(TR_Latitude) max_x
         FROM Scene
         GROUP BY Satellite, Sensor) s
-ON d.Name LIKE CONCAT(s.satellite, '%') AND d.Name LIKE CONCAT('%', s.sensor, '%')
+ON d.Name LIKE CONCAT(s.satellite, '%')
+        AND d.Name LIKE CONCAT('%', s.sensor, '%')
 ORDER BY d.Name;
 
 
@@ -58,8 +59,8 @@ SELECT s.SceneId id,
         BR_Latitude br_latitude,
         TR_Longitude tr_longitude,
         TR_Latitude tr_latitude
-FROM Scene s, Product p, Dataset d
-WHERE s.Deleted = 0 AND (s.SceneId = p.SceneId AND p.Dataset = d.Name)
+FROM Scene s, Product p
+WHERE s.Deleted = 0 AND (s.SceneId = p.SceneId)
 GROUP BY s.SceneId, p.Dataset
 ORDER BY p.Dataset, s.Date DESC, s.Path, s.Row;
 
