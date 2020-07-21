@@ -13,16 +13,26 @@ USE `catalogo`;
 CREATE OR REPLACE VIEW `stac_collection` AS
 SELECT d.Name id,
         d.Description description,
-        MIN(s.Date) start_date,
-        MAX(s.Date) end_date,
-        MIN(BL_Longitude) min_y,
-        MIN(BL_Latitude) min_x,
-        MAX(TR_Longitude) max_y,
-        MAX(TR_Latitude) max_x
-FROM Scene s, Product p, Dataset d
-WHERE s.sceneId = p.sceneId AND d.name = p.Dataset
-GROUP BY p.Dataset
-ORDER BY p.Dataset;
+        s.start_date,
+        s.end_date,
+        s.min_y,
+        s.min_x,
+        s.max_y,
+        s.max_x
+FROM Dataset d
+        LEFT JOIN
+        (SELECT Satellite satellite,
+                Sensor sensor,
+                MIN(Date) start_date,
+                MAX(Date) end_date,
+                MIN(BL_Longitude) min_y,
+                MIN(BL_Latitude) min_x,
+                MAX(TR_Longitude) max_y,
+                MAX(TR_Latitude) max_x
+        FROM Scene
+        GROUP BY Satellite, Sensor) s
+ON d.Name LIKE CONCAT(s.satellite, '%') AND d.Name LIKE CONCAT('%', s.sensor, '%')
+ORDER BY d.Name;
 
 
 CREATE OR REPLACE VIEW `stac_item` AS
