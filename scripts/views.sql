@@ -86,6 +86,20 @@ BEGIN
         -- updates stac_item table
         DROP TABLE IF EXISTS stac_item;
         CREATE TABLE IF NOT EXISTS stac_item (SELECT * FROM _stac_item);
+
+
+        -- ALTER TABLE stac_item
+        -- ADD CONSTRAINT stac_item_constraint_pk_id PRIMARY KEY (id, collection);
+
+        -- -- CREATE UNIQUE INDEX index_stac_item_id
+        -- -- ON stac_item (id);
+
+        -- CREATE INDEX stac_item_index_collection
+        -- ON stac_item (collection);
+
+        -- CREATE INDEX stac_item_index_date
+        -- ON stac_item (date);
+
 END |
 delimiter ;
 
