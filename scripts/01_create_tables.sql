@@ -33,3 +33,26 @@ CREATE TABLE `Location` (
 -- ALTER TABLE `Download`
 -- ADD FOREIGN KEY (`ip`) REFERENCES `Location`(`ip`)
 -- ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Script to create Asset table by Product table
+--
+
+DROP TABLE IF EXISTS Asset;
+CREATE TABLE IF NOT EXISTS Asset (
+        SELECT p.Dataset Dataset,
+        p.SceneId SceneId,
+        CONCAT('[',
+                GROUP_CONCAT(CONCAT('{"band": "', p.band, '", "href": "', p.filename,'"}')),
+        ']') Assets
+        FROM Product p
+        GROUP BY p.SceneId, p.Dataset
+        ORDER BY p.Dataset, p.SceneId
+);
+ALTER TABLE Asset ADD PRIMARY KEY (Dataset, SceneId);
+ALTER TABLE Asset ADD CONSTRAINT constraint_fk_dataset
+        FOREIGN KEY (Dataset) REFERENCES Dataset (name);
