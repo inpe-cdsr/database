@@ -28,8 +28,7 @@ ORDER BY d.Name;
 CREATE OR REPLACE VIEW `_stac_item` AS
 SELECT s.SceneId id,
         a.Dataset collection,
-        s.Date date,
-        s.CenterTime center_time,
+        s.CenterTime datetime,
         s.Path path,
         s.Row row,
         s.Satellite satellite,
@@ -48,7 +47,7 @@ SELECT s.SceneId id,
         TR_Latitude tr_latitude
 FROM Scene s, Asset a
 WHERE s.Deleted = 0 AND (s.SceneId = a.SceneId)
-ORDER BY a.Dataset, s.Date DESC, s.Path, s.Row;
+ORDER BY a.Dataset, s.CenterTime DESC, s.Path, s.Row;
 
 
 -- --------------------------------------------------------

@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.4
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: inpe_cdsr_db
--- Generation Time: Jul 02, 2020 at 06:54 PM
+-- Generation Time: Jul 31, 2020 at 07:44 PM
 -- Server version: 10.5.3-MariaDB-1:10.5.3+maria~focal
 -- PHP Version: 7.4.1
 
@@ -47,6 +47,18 @@ CREATE TABLE `Address` (
   `country` varchar(32) DEFAULT NULL,
   `delivery` int(11) DEFAULT NULL,
   `payment` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Asset`
+--
+
+CREATE TABLE `Asset` (
+  `Dataset` varchar(50) NOT NULL,
+  `SceneId` varchar(64) NOT NULL,
+  `Assets` mediumtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -195,48 +207,47 @@ CREATE TABLE `scene_dataset` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `stac_collection`
--- (See below for the actual view)
+-- Table structure for table `stac_collection`
 --
+
 CREATE TABLE `stac_collection` (
-`id` varchar(50)
-,`description` varchar(512)
-,`start_date` date
-,`end_date` date
-,`min_y` float
-,`min_x` float
-,`max_y` float
-,`max_x` float
-);
+  `id` varchar(50) NOT NULL,
+  `description` varchar(512) NOT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `min_y` float DEFAULT NULL,
+  `min_x` float DEFAULT NULL,
+  `max_y` float DEFAULT NULL,
+  `max_x` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `stac_item`
--- (See below for the actual view)
+-- Table structure for table `stac_item`
 --
+
 CREATE TABLE `stac_item` (
-`id` varchar(64)
-,`collection` varchar(50)
-,`date` date
-,`center_time` datetime
-,`path` varchar(11)
-,`row` varchar(11)
-,`satellite` varchar(50)
-,`sensor` varchar(6)
-,`cloud_cover` float
-,`sync_loss` float
-,`thumbnail` varchar(256)
-,`assets` mediumtext
-,`tl_longitude` float
-,`tl_latitude` float
-,`bl_longitude` float
-,`bl_latitude` float
-,`br_longitude` float
-,`br_latitude` float
-,`tr_longitude` float
-,`tr_latitude` float
-);
+  `id` varchar(64) NOT NULL,
+  `collection` varchar(50) NOT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `path` varchar(11) DEFAULT NULL,
+  `row` varchar(11) DEFAULT NULL,
+  `satellite` varchar(50) NOT NULL,
+  `sensor` varchar(6) NOT NULL,
+  `cloud_cover` float DEFAULT NULL,
+  `sync_loss` float DEFAULT NULL,
+  `thumbnail` varchar(256) NOT NULL,
+  `assets` mediumtext DEFAULT NULL,
+  `tl_longitude` float DEFAULT NULL,
+  `tl_latitude` float DEFAULT NULL,
+  `bl_longitude` float DEFAULT NULL,
+  `bl_latitude` float DEFAULT NULL,
+  `br_longitude` float DEFAULT NULL,
+  `br_latitude` float DEFAULT NULL,
+  `tr_longitude` float DEFAULT NULL,
+  `tr_latitude` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -269,6 +280,51 @@ CREATE TABLE `User` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `_stac_collection`
+-- (See below for the actual view)
+--
+CREATE TABLE `_stac_collection` (
+`id` varchar(50)
+,`description` varchar(512)
+,`start_date` date
+,`end_date` date
+,`min_y` float
+,`min_x` float
+,`max_y` float
+,`max_x` float
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `_stac_item`
+-- (See below for the actual view)
+--
+CREATE TABLE `_stac_item` (
+`id` varchar(64)
+,`collection` varchar(50)
+,`datetime` datetime
+,`path` varchar(11)
+,`row` varchar(11)
+,`satellite` varchar(50)
+,`sensor` varchar(6)
+,`cloud_cover` float
+,`sync_loss` float
+,`thumbnail` varchar(256)
+,`assets` mediumtext
+,`tl_longitude` float
+,`tl_latitude` float
+,`bl_longitude` float
+,`bl_latitude` float
+,`br_longitude` float
+,`br_latitude` float
+,`tr_longitude` float
+,`tr_latitude` float
+);
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `dash_amount_scenes_by_dataset_year_month_lon_lat`
 --
 DROP TABLE IF EXISTS `dash_amount_scenes_by_dataset_year_month_lon_lat`;
@@ -287,20 +343,20 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `scene_d
 -- --------------------------------------------------------
 
 --
--- Structure for view `stac_collection`
+-- Structure for view `_stac_collection`
 --
-DROP TABLE IF EXISTS `stac_collection`;
+DROP TABLE IF EXISTS `_stac_collection`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `stac_collection`  AS  select `d`.`Name` AS `id`,`d`.`Description` AS `description`,min(`s`.`Date`) AS `start_date`,max(`s`.`Date`) AS `end_date`,min(`s`.`BL_Longitude`) AS `min_y`,min(`s`.`BL_Latitude`) AS `min_x`,max(`s`.`TR_Longitude`) AS `max_y`,max(`s`.`TR_Latitude`) AS `max_x` from ((`Scene` `s` join `Product` `p`) join `Dataset` `d`) where `s`.`SceneId` = `p`.`SceneId` and `d`.`Name` = `p`.`Dataset` group by `p`.`Dataset` order by `p`.`Dataset` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `_stac_collection`  AS  select `d`.`Name` AS `id`,`d`.`Description` AS `description`,min(`s`.`Date`) AS `start_date`,max(`s`.`Date`) AS `end_date`,min(`s`.`BL_Longitude`) AS `min_y`,min(`s`.`BL_Latitude`) AS `min_x`,max(`s`.`TR_Longitude`) AS `max_y`,max(`s`.`TR_Latitude`) AS `max_x` from ((`Scene` `s` join `Asset` `a`) join `Dataset` `d`) where `s`.`SceneId` = `a`.`SceneId` and `d`.`Name` = `a`.`Dataset` group by `d`.`Name` order by `d`.`Name` ;
 
 -- --------------------------------------------------------
 
 --
--- Structure for view `stac_item`
+-- Structure for view `_stac_item`
 --
-DROP TABLE IF EXISTS `stac_item`;
+DROP TABLE IF EXISTS `_stac_item`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `stac_item`  AS  select `s`.`SceneId` AS `id`,`p`.`Dataset` AS `collection`,`s`.`Date` AS `date`,`s`.`CenterTime` AS `center_time`,`s`.`Path` AS `path`,`s`.`Row` AS `row`,`s`.`Satellite` AS `satellite`,`s`.`Sensor` AS `sensor`,`s`.`CloudCover` AS `cloud_cover`,`s`.`SyncLoss` AS `sync_loss`,`s`.`thumbnail` AS `thumbnail`,concat('[',group_concat(concat('{"band": "',`p`.`Band`,'", "href": "',`p`.`Filename`,'"}') separator ','),']') AS `assets`,`s`.`TL_Longitude` AS `tl_longitude`,`s`.`TL_Latitude` AS `tl_latitude`,`s`.`BL_Longitude` AS `bl_longitude`,`s`.`BL_Latitude` AS `bl_latitude`,`s`.`BR_Longitude` AS `br_longitude`,`s`.`BR_Latitude` AS `br_latitude`,`s`.`TR_Longitude` AS `tr_longitude`,`s`.`TR_Latitude` AS `tr_latitude` from ((`Scene` `s` join `Product` `p`) join `Dataset` `d`) where `s`.`SceneId` = `p`.`SceneId` and `p`.`Dataset` = `d`.`Name` group by `s`.`SceneId`,`p`.`Dataset` order by `p`.`Dataset`,`s`.`Date` desc,`s`.`Path`,`s`.`Row` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `_stac_item`  AS  select `s`.`SceneId` AS `id`,`a`.`Dataset` AS `collection`,`s`.`CenterTime` AS `datetime`,`s`.`Path` AS `path`,`s`.`Row` AS `row`,`s`.`Satellite` AS `satellite`,`s`.`Sensor` AS `sensor`,`s`.`CloudCover` AS `cloud_cover`,`s`.`SyncLoss` AS `sync_loss`,`s`.`thumbnail` AS `thumbnail`,`a`.`Assets` AS `assets`,`s`.`TL_Longitude` AS `tl_longitude`,`s`.`TL_Latitude` AS `tl_latitude`,`s`.`BL_Longitude` AS `bl_longitude`,`s`.`BL_Latitude` AS `bl_latitude`,`s`.`BR_Longitude` AS `br_longitude`,`s`.`BR_Latitude` AS `br_latitude`,`s`.`TR_Longitude` AS `tr_longitude`,`s`.`TR_Latitude` AS `tr_latitude` from (`Scene` `s` join `Asset` `a`) where `s`.`Deleted` = 0 and `s`.`SceneId` = `a`.`SceneId` order by `a`.`Dataset`,`s`.`CenterTime` desc,`s`.`Path`,`s`.`Row` ;
 
 --
 -- Indexes for dumped tables
@@ -312,6 +368,12 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `stac_it
 ALTER TABLE `Address`
   ADD PRIMARY KEY (`addressId`),
   ADD KEY `Address_idx1` (`CNPJ_CPF`);
+
+--
+-- Indexes for table `Asset`
+--
+ALTER TABLE `Asset`
+  ADD PRIMARY KEY (`Dataset`,`SceneId`);
 
 --
 -- Indexes for table `Dataset`
@@ -336,23 +398,32 @@ ALTER TABLE `Location`
 --
 ALTER TABLE `Product`
   ADD PRIMARY KEY (`Dataset`,`SceneId`,`Band`);
+ALTER TABLE `Product` ADD FULLTEXT KEY `DatasetSceneId` (`Dataset`,`SceneId`);
+ALTER TABLE `Product` ADD FULLTEXT KEY `Dataset` (`Dataset`);
 
 --
 -- Indexes for table `Scene`
 --
 ALTER TABLE `Scene`
-  ADD PRIMARY KEY (`SceneId`),
-  ADD KEY `Scene_idx4` (`Row`),
-  ADD KEY `Scene_idx2` (`Date`),
-  ADD KEY `Scene_idx3` (`Path`),
-  ADD KEY `Scene_idx6` (`CloudCover`),
-  ADD KEY `geo` (`TL_Latitude`,`TL_Longitude`,`BR_Latitude`,`BR_Longitude`);
+  ADD PRIMARY KEY (`SceneId`);
 
 --
 -- Indexes for table `SceneDataset`
 --
 ALTER TABLE `SceneDataset`
   ADD UNIQUE KEY `scenedataset` (`SceneId`,`Dataset`);
+
+--
+-- Indexes for table `stac_collection`
+--
+ALTER TABLE `stac_collection`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stac_item`
+--
+ALTER TABLE `stac_item`
+  ADD KEY `stac_item_index_collection` (`collection`);
 
 --
 -- Indexes for table `User`
@@ -376,6 +447,16 @@ ALTER TABLE `Address`
 --
 ALTER TABLE `Download`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `Asset`
+--
+ALTER TABLE `Asset`
+  ADD CONSTRAINT `constraint_fk_dataset` FOREIGN KEY (`Dataset`) REFERENCES `Dataset` (`Name`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

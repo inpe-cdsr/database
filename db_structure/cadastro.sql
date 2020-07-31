@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.4
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: inpe_cdsr_db
--- Generation Time: Jul 02, 2020 at 06:55 PM
+-- Generation Time: Jul 31, 2020 at 07:44 PM
 -- Server version: 10.5.3-MariaDB-1:10.5.3+maria~focal
 -- PHP Version: 7.4.1
 
