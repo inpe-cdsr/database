@@ -1,7 +1,7 @@
 --
--- Database: `catalogo`
+-- Database: `catalog`
 --
-USE `catalogo`;
+USE `catalog`;
 
 
 -- --------------------------------------------------------
@@ -10,7 +10,7 @@ USE `catalogo`;
 -- `_stac_collection` and `_stac_item` views
 --
 
-CREATE OR REPLACE VIEW `_stac_collection` AS
+CREATE OR REPLACE VIEW `stac_collection` AS
 SELECT d.Name id,
         d.Description description,
         MIN(s.Date) start_date,
@@ -25,10 +25,11 @@ GROUP BY d.Name
 ORDER BY d.Name;
 
 
-CREATE OR REPLACE VIEW `_stac_item` AS
+CREATE OR REPLACE VIEW `stac_item` AS
 SELECT s.SceneId id,
         a.Dataset collection,
         s.CenterTime datetime,
+        DATE(s.CenterTime) date,
         s.Path path,
         s.Row row,
         s.Satellite satellite,

@@ -1,7 +1,7 @@
 --
--- Database: `catalogo`
+-- Database: `catalog`
 --
-USE `catalogo`;
+USE `catalog`;
 
 
 -- --------------------------------------------------------
