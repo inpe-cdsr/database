@@ -39,6 +39,19 @@ FLUSH PRIVILEGES;
 
 
 --
+-- Grants for 'gerente'@'150.163.134.106' user
+--
+
+CREATE USER 'gerente'@'150.163.134.106' IDENTIFIED BY 'password';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON catalog.Scene TO 'gerente'@'150.163.134.106';
+GRANT SELECT, INSERT, UPDATE, DELETE ON catalog.SceneDataset TO 'gerente'@'150.163.134.106';
+GRANT SELECT, INSERT, UPDATE, DELETE ON catalog.Asset TO 'gerente'@'150.163.134.106';
+
+FLUSH PRIVILEGES;
+
+
+--
 -- Grants for 'gerente'@'150.163.134.119' user
 --
 
