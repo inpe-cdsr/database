@@ -45,9 +45,10 @@ SELECT s.SceneId id,
         BR_Longitude br_longitude,
         BR_Latitude br_latitude,
         TR_Longitude tr_longitude,
-        TR_Latitude tr_latitude
+        TR_Latitude tr_latitude,
+        s.Deleted deleted
 FROM Scene s, Asset a
-WHERE s.Deleted = 0 AND (s.SceneId = a.SceneId)
+WHERE s.SceneId = a.SceneId
 ORDER BY a.Dataset, s.CenterTime DESC, s.Path, s.Row;
 
 
