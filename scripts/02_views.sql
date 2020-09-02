@@ -81,9 +81,7 @@ ORDER BY _year_month, dataset;
 
 CREATE OR REPLACE VIEW `dash_download` AS
 SELECT u.email, dl.*
-FROM User u
-INNER JOIN
-(
+FROM (
     SELECT d.id, d.user_id, d.scene_id, d.path, d.date, l.*
     FROM (
         SELECT id, userId as user_id, sceneId as scene_id, path, ip, date
@@ -93,4 +91,6 @@ INNER JOIN
         Location l
     ON d.ip = l.ip
 ) dl
+LEFT JOIN
+    User u
 ON u.userId = dl.user_id;
