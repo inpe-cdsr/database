@@ -55,7 +55,7 @@ ORDER BY a.Dataset, s.CenterTime DESC, s.Path, s.Row;
 -- --------------------------------------------------------
 
 --
--- `scene_dataset` and `dash_amount_scenes_by_dataset_year_month_lon_lat` views
+-- other views
 --
 
 CREATE OR REPLACE VIEW `scene_dataset` AS
@@ -77,3 +77,20 @@ SELECT COUNT(SceneId) amount,
 FROM `SceneDataset`
 GROUP BY dataset, _year_month, longitude, latitude
 ORDER BY _year_month, dataset;
+
+
+CREATE OR REPLACE VIEW `dash_download` AS
+SELECT u.email, dl.*
+FROM User u
+INNER JOIN
+(
+    SELECT d.id, d.user_id, d.scene_id, d.path, d.date, l.*
+    FROM (
+        SELECT id, userId as user_id, sceneId as scene_id, path, ip, date
+        FROM Download
+    ) d
+    LEFT JOIN
+        Location l
+    ON d.ip = l.ip
+) dl
+ON u.userId = dl.user_id;
