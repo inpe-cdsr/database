@@ -44,11 +44,16 @@ CREATE TABLE `Location` (
 
 DROP TABLE IF EXISTS Asset;
 CREATE TABLE IF NOT EXISTS Asset (
-        SELECT p.Dataset Dataset,
-        p.SceneId SceneId,
-        CONCAT('[',
-                GROUP_CONCAT(CONCAT('{"band": "', p.band, '", "href": "', p.filename,'"}')),
-        ']') Assets
+        SELECT
+                p.Dataset Dataset,
+                p.SceneId SceneId,
+                CONCAT('[',
+                        GROUP_CONCAT(
+                                CONCAT('{"band": "', p.Band,
+                                       '", "resolution": "', p.Resolution,
+                                       '", "href": "', p.Filename,'"}')
+                        ),
+                ']') Assets
         FROM Product p
         GROUP BY p.SceneId, p.Dataset
         ORDER BY p.Dataset, p.SceneId
