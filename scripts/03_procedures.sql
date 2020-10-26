@@ -21,7 +21,7 @@ CREATE PROCEDURE IF NOT EXISTS logging_info (_text TEXT)
 BEGIN
         SELECT _text as '** INFO: ';
 END |
-DELIMITER ;
+DELIMITER;
 
 
 -- --------------------------------------------------
@@ -46,5 +46,22 @@ BEGIN
                 ON stac_item (collection);
 
         CALL logging_info('stac tables have been updated successfuly!');
+END |
+DELIMITER;
+
+
+-- --------------------------------------------------
+-- `remove_old_rows_from_security` procedure
+-- --------------------------------------------------
+
+DROP PROCEDURE IF EXISTS remove_old_rows_from_security;
+
+DELIMITER |
+CREATE PROCEDURE IF NOT EXISTS remove_old_rows_from_security ()
+BEGIN
+        -- 86400 seconds is one day (24 hours)
+        -- remove all rows that are one day old
+        DELETE FROM security
+        WHERE TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, timestamp)) >= 86400;
 END |
 DELIMITER ;
