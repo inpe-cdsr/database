@@ -65,3 +65,20 @@ BEGIN
         WHERE TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, timestamp)) >= 86400;
 END |
 DELIMITER ;
+
+
+-- --------------------------------------------------
+-- `remove_trash_from_download` procedure
+-- development use, not production use
+-- --------------------------------------------------
+
+DROP PROCEDURE IF EXISTS remove_trash_from_download;
+
+DELIMITER |
+CREATE PROCEDURE IF NOT EXISTS remove_trash_from_download ()
+BEGIN
+        -- remove bad values from Download table
+        DELETE FROM Download
+        WHERE sceneId IS NULL OR CHAR_LENGTH(sceneId) <= 8;
+END |
+DELIMITER ;

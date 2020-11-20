@@ -79,12 +79,16 @@ GROUP BY dataset, _year_month, longitude, latitude
 ORDER BY _year_month, dataset;
 
 
+-- --------------------------------------------------------
+-- `dash_download` view
+-- Join among Download, Location and User tables
+-- --------------------------------------------------------
 CREATE OR REPLACE VIEW `dash_download` AS
-SELECT u.email, dl.*
+SELECT u.email, u.fullname name, dl.*
 FROM (
-    SELECT d.id, d.user_id, d.scene_id, d.path, d.date, l.*
+    SELECT d.scene_id, d.user_id, d.date, d.path, l.*
     FROM (
-        SELECT id, userId as user_id, sceneId as scene_id, path, ip, date
+        SELECT sceneId scene_id, userId user_id, DATE(date) date, path, ip
         FROM Download
     ) d
     LEFT JOIN
@@ -94,3 +98,42 @@ FROM (
 LEFT JOIN
     User u
 ON u.userId = dl.user_id;
+
+
+-- --------------------------------------------------------
+-- `dash_download_nofbs` view
+-- This view returns the number of files by scene (nofbs)
+-- that a single user downloaded in one day
+-- --------------------------------------------------------
+CREATE OR REPLACE VIEW `dash_download_nofbs` AS
+SELECT scene_id, count(scene_id) nofbs, user_id, name, email, date, longitude, latitude
+FROM `dash_download`
+GROUP BY scene_id, user_id, date
+ORDER BY scene_id, nofbs DESC, date DESC;
+
+
+-- --------------------------------------------------------
+-- Statistics
+-- --------------------------------------------------------
+
+-- --------------------------------------------------------
+-- This script returns the total of downloaded scenes (tds)
+-- --------------------------------------------------------
+SELECT COUNT(scene_id) tds
+FROM `dash_download_nofbs
+`
+
+-- --------------------------------------------------------
+-- This script returns the total of downloaded assets (files) (tda)
+-- --------------------------------------------------------
+SELECT SUM(nofbs) tda
+FROM `dash_download_nofbs`
+
+
+-- --------------------------------------------------------
+-- This script returns the number of downloaded scenes (nods) by user
+-- --------------------------------------------------------
+SELECT count(scene_id) nods, user_id, name, email
+FROM `dash_download_nofbs`
+GROUP BY user_id
+ORDER BY user_id, nods DESC
