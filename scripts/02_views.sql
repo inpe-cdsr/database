@@ -120,14 +120,14 @@ ORDER BY scene_id, nofbs DESC, date DESC;
 -- This script returns the total of downloaded scenes (tds)
 -- --------------------------------------------------------
 SELECT COUNT(scene_id) tds
-FROM `dash_download_nofbs
+FROM `dash_download_nofbs;
 `
 
 -- --------------------------------------------------------
 -- This script returns the total of downloaded assets (files) (tda)
 -- --------------------------------------------------------
 SELECT SUM(nofbs) tda
-FROM `dash_download_nofbs`
+FROM `dash_download_nofbs`;
 
 
 -- --------------------------------------------------------
@@ -136,4 +136,27 @@ FROM `dash_download_nofbs`
 SELECT count(scene_id) nods, user_id, name, email
 FROM `dash_download_nofbs`
 GROUP BY user_id
-ORDER BY user_id, nods DESC
+ORDER BY user_id, nods DESC;
+
+
+-- --------------------------------------------------------
+-- This script returns the number of downloaded scenes (nods)
+-- by CBERS4A and for each of its instruments
+-- --------------------------------------------------------
+
+SELECT  (
+    SELECT COUNT(scene_id) FROM `dash_download_nofbs`
+    WHERE scene_id LIKE 'CBERS4A_%'
+) AS nods_cbers4a,
+(
+    SELECT COUNT(scene_id) FROM `dash_download_nofbs`
+    WHERE scene_id LIKE 'CBERS4A_MUX%'
+) AS nods_cbers4a_mux,
+(
+    SELECT COUNT(scene_id) FROM `dash_download_nofbs`
+    WHERE scene_id LIKE 'CBERS4A_WFI%'
+) AS nods_cbers4a_wfi,
+(
+    SELECT COUNT(scene_id) FROM `dash_download_nofbs`
+    WHERE scene_id LIKE 'CBERS4A_WPM%'
+) AS nods_cbers4a_wpm;
