@@ -120,8 +120,13 @@ ORDER BY scene_id, nofbs DESC, date DESC;
 -- This script returns the total of downloaded scenes (tds)
 -- --------------------------------------------------------
 SELECT COUNT(scene_id) tds
-FROM `dash_download_nofbs;
-`
+FROM `dash_download_nofbs`;
+
+
+SELECT COUNT(scene_id) tds
+FROM `dash_download_nofbs`
+WHERE (date BETWEEN '2020-01-01' AND '2020-12-31');
+
 
 -- --------------------------------------------------------
 -- This script returns the total of downloaded assets (files) (tda)
