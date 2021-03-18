@@ -18,7 +18,8 @@ SELECT d.Name id,
         MIN(BL_Longitude) min_y,
         MIN(BL_Latitude) min_x,
         MAX(TR_Longitude) max_y,
-        MAX(TR_Latitude) max_x
+        MAX(TR_Latitude) max_x,
+        d.Metadata metadata
 FROM Scene s, Asset a, Dataset d
 WHERE s.SceneId = a.SceneId AND d.Name = a.Dataset
 GROUP BY d.Name
