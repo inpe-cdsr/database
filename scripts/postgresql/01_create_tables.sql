@@ -1,14 +1,22 @@
 
 --------------------------------------------------
--- Create table
+-- Create database
 --------------------------------------------------
 
 -- Run it inside PgAdmin
 -- CREATE DATABASE cdsr_register;
 
 
+-- Drop old tables
+DROP TABLE IF EXISTS location;
+DROP TABLE IF EXISTS download;
+DROP TABLE IF EXISTS security;
+DROP TABLE IF EXISTS user_;
+DROP TABLE IF EXISTS address;
+
+
 --------------------------------------------------
--- User
+-- User tables
 --------------------------------------------------
 
 CREATE TABLE address (
@@ -24,10 +32,9 @@ CREATE TABLE address (
 );
 
 CREATE TABLE user_ (
-    id SERIAL PRIMARY KEY,
+    username TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    username TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     phone TEXT NOT NULL,
     company_name TEXT NOT NULL,
@@ -36,25 +43,24 @@ CREATE TABLE user_ (
     address_id INT,
     is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_user_address_id FOREIGN KEY (address_id)
+    CONSTRAINT user_fkey_address_id FOREIGN KEY (address_id)
         REFERENCES address (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
 CREATE TABLE security (
-  id SERIAL PRIMARY KEY,
-  user_id INT NOT NULL,
-  token TEXT NOT NULL,
+  token TEXT PRIMARY KEY,
+  username TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_security_user_id FOREIGN KEY (user_id)
-      REFERENCES user_ (id)
+  CONSTRAINT security_fkey_username FOREIGN KEY (username)
+      REFERENCES user_ (username)
       ON UPDATE CASCADE
       ON DELETE CASCADE
 );
 
 --------------------------------------------------
--- Download
+-- Download tables
 --------------------------------------------------
 
 CREATE TABLE location (
@@ -74,21 +80,20 @@ CREATE TABLE location (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE download (
     id SERIAL PRIMARY KEY,
     item_id TEXT NOT NULL,
     collection TEXT NOT NULL,
     path TEXT NOT NULL,
-    user_id INT NOT NULL,
+    username TEXT NOT NULL,
     user_name TEXT NOT NULL,
     user_email TEXT NOT NULL,
     ip TEXT NOT NULL,
     long NUMERIC,
     lat NUMERIC,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_download_user_id FOREIGN KEY (user_id)
-        REFERENCES user_ (id)
+    CONSTRAINT download_fkey_username FOREIGN KEY (username)
+        REFERENCES user_ (username)
         ON UPDATE CASCADE
 );
 
