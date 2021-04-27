@@ -49,6 +49,8 @@ CREATE TABLE user_ (
         ON DELETE CASCADE
 );
 
+CREATE index ON user_(address_id);
+
 CREATE TABLE security (
   token TEXT PRIMARY KEY,
   username TEXT NOT NULL,
