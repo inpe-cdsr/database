@@ -31,6 +31,9 @@ CREATE TABLE address (
     complement TEXT
 );
 
+-- fix sequence
+-- SELECT setval('address_id_seq', COALESCE((SELECT MAX(id)+1 FROM address), 1), false);
+
 CREATE TABLE user_ (
     username TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -93,11 +96,13 @@ CREATE TABLE download (
     ip TEXT NOT NULL,
     long NUMERIC,
     lat NUMERIC,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT download_fkey_username FOREIGN KEY (username)
-        REFERENCES user_ (username)
-        ON UPDATE CASCADE
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON COLUMN download.item_id IS 'bdc.items table is inside cdsr_catalog database.';
 COMMENT ON COLUMN download.item_id IS 'bdc.collections table is inside cdsr_catalog database.';
+
+CREATE INDEX download_idx_created_at_reverse ON download (created_at DESC);
+
+-- remove constraint
+-- ALTER TABLE download DROP CONSTRAINT download_fkey_username;
