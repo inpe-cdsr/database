@@ -70,8 +70,8 @@ CREATE TABLE security (
 
 CREATE TABLE location (
   ip TEXT PRIMARY KEY,
-  long NUMERIC,
-  lat NUMERIC,
+  longitude NUMERIC,
+  latitude NUMERIC,
   city TEXT,
   district TEXT,
   region TEXT,
@@ -94,8 +94,8 @@ CREATE TABLE download (
     user_name TEXT NOT NULL,
     user_email TEXT NOT NULL,
     ip TEXT NOT NULL,
-    long NUMERIC,
-    lat NUMERIC,
+    longitude NUMERIC,
+    latitude NUMERIC,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -103,6 +103,7 @@ COMMENT ON COLUMN download.item_id IS 'bdc.items table is inside cdsr_catalog da
 COMMENT ON COLUMN download.item_id IS 'bdc.collections table is inside cdsr_catalog database.';
 
 CREATE INDEX download_idx_created_at_reverse ON download (created_at DESC);
+CREATE INDEX download_idx_item_id_date_reverse ON download (item_id, DATE(created_at) DESC);
 
 -- remove constraint
 -- ALTER TABLE download DROP CONSTRAINT download_fkey_username;
