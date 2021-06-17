@@ -11,19 +11,16 @@ USE `catalog`;
 --
 
 CREATE OR REPLACE VIEW `stac_collection` AS
-SELECT d.Name id,
-        d.Description description,
-        MIN(s.Date) start_date,
-        MAX(s.Date) end_date,
-        MIN(BL_Longitude) min_y,
-        MIN(BL_Latitude) min_x,
-        MAX(TR_Longitude) max_y,
-        MAX(TR_Latitude) max_x,
-        d.Metadata metadata
-FROM Scene s, Asset a, Dataset d
-WHERE s.SceneId = a.SceneId AND d.Name = a.Dataset
-GROUP BY d.Name
-ORDER BY d.Name;
+SELECT Name id,
+        Description description,
+        start_date, end_date,
+        min_x, min_y, max_x, max_y,
+        Metadata metadata
+FROM Dataset
+WHERE start_date IS NOT NULL AND end_date IS NOT NULL
+    AND min_y IS NOT NULL AND min_x IS NOT NULL
+    AND max_y IS NOT NULL AND max_x IS NOT NULL
+ORDER BY Name;
 
 
 CREATE OR REPLACE VIEW `stac_item` AS
