@@ -34,6 +34,23 @@ CREATE TABLE `Location` (
 -- ADD FOREIGN KEY (`ip`) REFERENCES `Location`(`ip`)
 -- ON UPDATE CASCADE ON DELETE CASCADE;
 
+-- ALTER TABLE Dataset
+--     ADD COLUMN start_date TIMESTAMP NULL DEFAULT NULL AFTER Description;
+
+-- ALTER TABLE Dataset
+--     ADD COLUMN end_date TIMESTAMP NULL DEFAULT NULL AFTER start_date;
+
+-- ALTER TABLE Dataset
+--     ADD COLUMN min_x DOUBLE AFTER end_date;
+
+-- ALTER TABLE Dataset
+--     ADD COLUMN min_y DOUBLE AFTER min_x;
+
+-- ALTER TABLE Dataset
+--     ADD COLUMN max_x DOUBLE AFTER min_y;
+
+-- ALTER TABLE Dataset
+--     ADD COLUMN max_y DOUBLE AFTER max_x;
 
 
 -- --------------------------------------------------------
