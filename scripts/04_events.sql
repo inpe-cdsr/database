@@ -49,3 +49,25 @@ BEGIN
         CALL remove_old_rows_from_security();
 END |
 DELIMITER ;
+
+
+-- --------------------------------------------------
+-- `e_update_dataset_records
+-- --------------------------------------------------
+
+DROP EVENT IF EXISTS e_update_dataset_records;
+
+-- Runs 1 time a day
+DELIMITER |
+CREATE EVENT IF NOT EXISTS e_update_dataset_records
+        ON SCHEDULE
+                EVERY 1 DAY
+                -- starts on the next day at 00:00:00
+                STARTS (TIMESTAMP(CURRENT_DATE) + INTERVAL 1 DAY)
+
+COMMENT 'Update Dataset table records every day.'
+DO
+BEGIN
+        CALL update_dataset_records();
+END |
+DELIMITER ;
