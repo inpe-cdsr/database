@@ -35,10 +35,10 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY download_view_number_of_assets;
 -- number of downloaded items by users
 --------------------------------------------------
 CREATE OR REPLACE VIEW download_view_number_of_items AS
-SELECT COUNT(item_id) number_of_items, username, user_email, user_name,
+SELECT COUNT(item_id) number_of_items, collection, username, user_email, user_name,
 		date, ip, longitude, latitude
 FROM download_view_number_of_assets
-GROUP BY date, ip, longitude, latitude, username, user_email, user_name
+GROUP BY collection, date, ip, longitude, latitude, username, user_email, user_name
 ORDER BY number_of_items DESC;
 
 -- SELECT * FROM download_view_number_of_items;
@@ -54,6 +54,7 @@ ORDER BY number_of_items DESC;
 -- faster
 SELECT COUNT(item_id) total_number_of_items
 FROM download_view_number_of_assets;
+
 -- slower
 SELECT SUM(number_of_items) total_number_of_items
 FROM download_view_number_of_items;
@@ -65,8 +66,9 @@ SELECT SUM(number_of_assets) total_number_of_assets
 FROM download_view_number_of_assets;
 
 --------------------------------------------------
--- number of downloaded items by satellte/sensor
+-- number of downloaded items by satellte/sensor using both views
 --------------------------------------------------
+-- faster
 SELECT COUNT(item_id) number_of_items,
 		CONCAT(
 			SPLIT_PART(collection, '_', 1),
@@ -74,5 +76,16 @@ SELECT COUNT(item_id) number_of_items,
 			SPLIT_PART(collection, '_', 2)
 		) satellite_sensor
 FROM download_view_number_of_assets
+GROUP BY satellite_sensor
+ORDER BY number_of_items DESC, satellite_sensor;
+
+-- slower
+SELECT SUM(number_of_items) number_of_items,
+		CONCAT(
+			SPLIT_PART(collection, '_', 1),
+			'_',
+			SPLIT_PART(collection, '_', 2)
+		) satellite_sensor
+FROM download_view_number_of_items
 GROUP BY satellite_sensor
 ORDER BY number_of_items DESC, satellite_sensor;
