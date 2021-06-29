@@ -1,13 +1,16 @@
 
---------------------------------------------------
+----------------------------------------------------------------------------------------------------
 -- Create database
---------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
 -- Run it inside PgAdmin
 -- CREATE DATABASE cdsr_register;
 
 
+--------------------------------------------------
 -- Drop old tables
+--------------------------------------------------
+
 DROP TABLE IF EXISTS location;
 DROP TABLE IF EXISTS download;
 DROP TABLE IF EXISTS security;
@@ -107,3 +110,10 @@ CREATE INDEX download_idx_item_id_date_reverse ON download (item_id, DATE(create
 
 -- remove constraint
 -- ALTER TABLE download DROP CONSTRAINT download_fkey_username;
+
+-- table to save the logging messages related to download table
+CREATE TABLE download_logging (
+	id SERIAL,
+	message TEXT,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
