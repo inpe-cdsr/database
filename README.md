@@ -10,10 +10,34 @@ git clone https://github.com/inpe-cdsr/database.git && \
 cd database/
 ```
 
+
+## MariaDB
+
 Create the database schemas and views with the following commands:
 
 ```
 $ docker exec -i inpe_cdsr_db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < db_structure/catalogo.sql
 
 $ docker exec -i inpe_cdsr_db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < db_structure/cadastro.sql
+```
+
+
+## PostgreSQL
+
+Create a backup of `cdsr_catalog` database:
+
+```
+docker exec -u postgres inpe_cdsr_postgis pg_dump -Fc cdsr_catalog > $(date +%Y_%m_%d)_cdsr_catalog.dump
+```
+
+When you restore the above backup, if there is not a `cdsr_catalog` database, then create it:
+
+```
+docker exec -u postgres inpe_cdsr_postgis createdb -T template0 cdsr_catalog
+```
+
+Restore the it inside `cdsr_catalog` database:
+
+```
+docker exec -i -u postgres inpe_cdsr_postgis pg_restore -d cdsr_catalog < $(date +%Y_%m_%d)_cdsr_catalog.dump
 ```
