@@ -16,7 +16,7 @@ WITH NO DATA;
 
 -- an index is necessary to refresh the materialized view concurrently
 CREATE UNIQUE INDEX idx_download_view_number_of_assets
-	ON download_view_number_of_assets (item_id, username, date, ip);
+	ON download_view_number_of_assets (item_id, username, collection, date, ip);
 
 -- update the materialized view
 -- first time
@@ -34,8 +34,10 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY download_view_number_of_assets;
 --------------------------------------------------
 -- number of downloaded items by users
 --------------------------------------------------
+DROP VIEW IF EXISTS download_view_number_of_items;
 CREATE OR REPLACE VIEW download_view_number_of_items AS
-SELECT COUNT(item_id) number_of_items, collection, username, user_email, user_name,
+SELECT COUNT(item_id) number_of_items, SUM(number_of_assets) number_of_assets,
+		collection, username, user_email, user_name,
 		date, ip, longitude, latitude
 FROM download_view_number_of_assets
 GROUP BY collection, date, ip, longitude, latitude, username, user_email, user_name
@@ -49,6 +51,12 @@ ORDER BY number_of_items DESC;
 ----------------------------------------------------------------------------------------------------
 
 --------------------------------------------------
+-- total number of downloaded assets
+--------------------------------------------------
+SELECT SUM(number_of_assets) total_number_of_assets
+FROM download_view_number_of_assets;
+
+--------------------------------------------------
 -- total number of downloaded items using both views
 --------------------------------------------------
 -- faster
@@ -59,11 +67,6 @@ FROM download_view_number_of_assets;
 SELECT SUM(number_of_items) total_number_of_items
 FROM download_view_number_of_items;
 
---------------------------------------------------
--- total number of downloaded assets
---------------------------------------------------
-SELECT SUM(number_of_assets) total_number_of_assets
-FROM download_view_number_of_assets;
 
 --------------------------------------------------
 -- number of downloaded items by satellte/sensor using both views
